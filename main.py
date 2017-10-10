@@ -3,7 +3,23 @@
 Created on Tue Oct 10 10:58:34 2017
 @author: anni11
 """
-file =open("NLP.txt","r")
+def cal(sentence):
+    
+    l=sentence.split()
+    res=[]
+    for i in range(5):
+        r=1
+        for s in l:
+           if s in cnt[i]:r=r*cnt[i][s]
+           else:r*=mn
+        #if r==1:r=0
+        res.append((r,i))
+    res.sort(reverse=True)
+    return res
+
+
+
+file =open("training_data.txt","r")
 mapp=dict()
 
 mapp["when"]=0
@@ -35,20 +51,6 @@ for i in range(5):
         mn=min(mn,cnt[i][keys])
 
 sen="what time does the train leave";
-
-def cal(sentence):
-    
-    l=sentence.split()
-    res=[]
-    for i in range(5):
-        r=1
-        for s in l:
-           if s in cnt[i]:r=r*cnt[i][s]
-           else:r*=mn
-        #if r==1:r=0
-        res.append((r,i))
-    res.sort(reverse=True)
-    return res
 
 print(cal(sen))
 
