@@ -99,10 +99,15 @@ print(classifier.accuracy_test("accuracy_test.txt"))
 print()
 # add question to the file predict_data.txt for prediction
 l=classifier.predict_from_file("predict_data.txt")
-for x in l:
-    print(x)
-# ..... or simply write the query here to get the prediction
+for x in l: print(x)
 print()
+
+
+
+
+# ..... or simply write the query here to get the prediction
+
 print("label: " + classifier.predict("WRITE YOUR QUERY HERE TO GET THE LABEL"))
 
 
+# ..... CODE ends
