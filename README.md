@@ -18,5 +18,7 @@ This method classifies/predicts a given question/sentence/query into one of the 
 
 # Files used
 predict_data.txt - this file contains the questions whose predictions/classifications are required.
+
 training_data.txt - this file contains the training data to feed the model.
+
 accuracy_test.txt - this file consists of some separated data from the training_data file and is tested to know the accuracy.
