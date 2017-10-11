@@ -107,7 +107,7 @@ print()
 
 # ..... or simply write the query here to get the prediction
 
-print("label: " + classifier.predict("WRITE YOUR QUERY HERE TO GET THE LABEL"))
+print(classifier.predict("WRITE YOUR QUERY HERE TO GET THE LABEL"))
 
 
 # ..... CODE ends
