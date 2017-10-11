@@ -28,6 +28,7 @@ class NlpClassifier(object):
     def train(self,filename):
         file=open(filename,"r")
         for line in file:
+            if line=='\n':continue
             tokens=line.split()
             idx=self.mapp[tokens[-1]]
             for token in tokens:
@@ -45,6 +46,7 @@ class NlpClassifier(object):
         tot=0
         hit=0
         for line in file:
+            if line=='\n':continue
             tot+=1
             tok=line.split()
             label=tok[-1]
@@ -73,7 +75,8 @@ class NlpClassifier(object):
 
 
 classifier=NlpClassifier(["who","what","when","affirmation","unknown"])
-classifier.train("training_data.txt")
-
-# print(classifier.predict("who are you?"))
-print(classifier.accuracy_test("accuracy_test.txt"))
+classifier.train("NLP.txt")
+print()
+print(classifier.predict("who are you?"))
+print()
+print(classifier.accuracy_test("NLP2.txt"))
