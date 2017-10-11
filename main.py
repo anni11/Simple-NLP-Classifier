@@ -8,6 +8,7 @@ Created on Tue Oct 10 10:58:34 2017
 
 class NlpClassifier(object):
     def __init__(self,arr):
+        # initialize the variables
         self.mapp=dict()
         self.mapp2=dict()
         self.N=len(arr)
@@ -20,16 +21,21 @@ class NlpClassifier(object):
         self.prob=[dict() for i in range(len(arr))]
     
     def calculate_probability(self):
+        # a utility function
+        # calculate the probability of the words occuring in the train data to get a NaiveBayes model
         for i in range(self.N):
             for keys in self.prob[i].keys():
                 self.prob[i][keys]=self.prob[i][keys]/self.totalWords[i]
                 self.m_val=min(self.m_val,self.prob[i][keys])
 
     def train(self,filename):
+        # train the model by reading from a file
+        # file consists of questions and their label
         file=open(filename,"r")
         for line in file:
             if line=='\n':continue
             tokens=line.split()
+            #print(tokens)
             idx=self.mapp[tokens[-1]]
             for token in tokens:
                 if token==',,,':
@@ -42,6 +48,8 @@ class NlpClassifier(object):
         
         
     def accuracy_test(self,fileName):
+        # test the accuracy of the algorithm by segregating some data from training data
+        # returns the accuracy.
         file=open(fileName,"r")
         tot=0
         hit=0
@@ -55,13 +63,14 @@ class NlpClassifier(object):
             for s in tok:
                 ques+=s
                 ques+=" "
-            print(self.mapp2[self.predict(ques)[0][1]])
             if self.mapp2[self.predict(ques)[0][1]]==label:
                 hit+=1
         return hit/tot
         
         
     def predict(self,ques):
+        # ques is the question to be predicted, it's type is string
+        # returns an array of tuples = (probability of the label, label index in mapp)
         l=ques.split()
         res=[]
         for i in range(self.N):
@@ -72,11 +81,25 @@ class NlpClassifier(object):
             res.append((r,i))
         res.sort(reverse=True)
         return res
-
-
+    
+    def predict_from_file(self,filename):
+        # returns an array of tuples = (question,prediction) where the questions are read from the file predict_data.txt
+        file = open(filename,"r")
+        res=[]
+        for line in file:
+            if line == '\n':
+                continue
+            res.append((line, self.mapp2[self.predict(line)[0][1]]))
+        return res
+        
+        
 classifier=NlpClassifier(["who","what","when","affirmation","unknown"])
-classifier.train("NLP.txt")
+classifier.train("training_data.txt")
 print()
 print(classifier.predict("who are you?"))
 print()
-print(classifier.accuracy_test("NLP2.txt"))
+print(classifier.accuracy_test("accuracy_test.txt"))
+print()
+l=classifier.predict_from_file("predict_data.txt")
+for x in l:
+    print(x)
