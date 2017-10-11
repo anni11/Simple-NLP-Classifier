@@ -1,56 +1,79 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Oct 10 10:58:34 2017
+
 @author: anni11
 """
-def cal(sentence):
+
+
+class NlpClassifier(object):
+    def __init__(self,arr):
+        self.mapp=dict()
+        self.mapp2=dict()
+        self.N=len(arr)
+        self.m_val=1
+        for i in range(len(arr)):
+            self.mapp[arr[i]]=i
+            self.mapp2[i]=arr[i]
+        self.totalWords=[0 for i in range(5)]
+        self.l=[[] for i in range(5)]
+        self.prob=[dict() for i in range(len(arr))]
     
-    l=sentence.split()
-    res=[]
-    for i in range(5):
-        r=1
-        for s in l:
-           if s in cnt[i]:r=r*cnt[i][s]
-           else:r*=mn
-        #if r==1:r=0
-        res.append((r,i))
-    res.sort(reverse=True)
-    return res
+    def calculate_probability(self):
+        for i in range(self.N):
+            for keys in self.prob[i].keys():
+                self.prob[i][keys]=self.prob[i][keys]/self.totalWords[i]
+                self.m_val=min(self.m_val,self.prob[i][keys])
+
+    def train(self,filename):
+        file=open(filename,"r")
+        for line in file:
+            tokens=line.split()
+            idx=self.mapp[tokens[-1]]
+            for token in tokens:
+                if token==',,,':
+                    break
+                self.totalWords[idx]+=1
+                if token not in self.prob[idx]:self.prob[idx][token]=1
+                else: self.prob[idx][token]+=1
+            self.l[idx].append(tokens[0:-2])
+        self.calculate_probability()
+        
+        
+    def accuracy_test(self,fileName):
+        file=open(fileName,"r")
+        tot=0
+        hit=0
+        for line in file:
+            tot+=1
+            tok=line.split()
+            label=tok[-1]
+            tok=tok[0:-2]
+            ques=""
+            for s in tok:
+                ques+=s
+                ques+=" "
+            print(self.mapp2[self.predict(ques)[0][1]])
+            if self.mapp2[self.predict(ques)[0][1]]==label:
+                hit+=1
+        return hit/tot
+        
+        
+    def predict(self,ques):
+        l=ques.split()
+        res=[]
+        for i in range(self.N):
+            r=1
+            for s in l:
+               if s in self.prob[i]:r=r*self.prob[i][s]
+               else:r*=self.m_val
+            res.append((r,i))
+        res.sort(reverse=True)
+        return res
 
 
+classifier=NlpClassifier(["who","what","when","affirmation","unknown"])
+classifier.train("training_data.txt")
 
-file =open("training_data.txt","r")
-mapp=dict()
-
-mapp["when"]=0
-mapp["what"]=1
-mapp["who"]=2
-mapp["affirmation"]=3
-mapp["unknown"]=4
-
-cnt=[dict() for _ in range(5)]
-
-#print(cnt)
-
-tot=[0 for i in range(5)]
-l=[[] for i in range(5)]
-for line in file:
-    strr=line.split()
-    idx=mapp[strr[-1]]
-    for s in strr:
-        if s==',,,':break
-        tot[idx]+=1    
-        if s not in cnt[idx]:cnt[idx][s]=1;
-        else: cnt[idx][s]=cnt[idx][s]+1;
-    l[idx].append(strr[0:-2])
-
-mn=1
-for i in range(5):
-    for keys in cnt[i].keys():
-        cnt[i][keys]=cnt[i][keys]/tot[i]
-        mn=min(mn,cnt[i][keys])
-
-sen="what time does the train leave";
-
-print(cal(sen))
-
+# print(classifier.predict("who are you?"))
+print(classifier.accuracy_test("accuracy_test.txt"))
