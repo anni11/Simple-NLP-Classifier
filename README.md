@@ -11,7 +11,7 @@ We can predict the type of question into one of the 5 categories - who,what,when
 This method accepts the filename as a parameter and trains the model so that it can classify any given query into one of the five labels.
 
 ### accuracy_test method
-This method tests the accuracy of the trained model by performing the classification on some examples which have already been separated from the training dataset randomly.The accuracy comes out be around 90% for the given dataset.This method accepts filename as the parameter.
+This method tests the accuracy of the trained model by performing the classification on some examples which have already been separated from the training dataset randomly.The accuracy comes out be around 80% for the given dataset.This method accepts filename as the parameter.
 
 ### predict method
 This method classifies/predicts a given question/sentence/query into one of the following type of question - who,when,what,affirmation,unknown. This method accepts string as a parameter and returns the predicted label.
